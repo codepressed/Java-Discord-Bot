@@ -5,6 +5,7 @@ import apesteguia.dani.discordbot.configuration.ConfigValues;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -45,9 +46,15 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        String message = event.getMessage().getContentRaw();
-        if(message.equals("!hello")){
-            event.getChannel().sendMessage("Salu2 amigo, cómo te encuentras hoy?").queue();
+        String[] arguments = event.getMessage().getContentRaw().split(" ");
+        if(arguments[0].equals("!mention")){
+            Member member = event.getMessage().getMentions().getMembers().get(0);
+            if(!member.getUser().isBot()){
+                event.getChannel().sendMessage("Have a good day "+member.getUser().getAsMention()).queue();
+            }else{
+                event.getChannel().sendMessage("Sorry, I can't mention bots").queue();
+            }
+            //event.getChannel().sendMessage("How are you doing today").queue();
         }
     }
 }
